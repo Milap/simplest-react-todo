@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 const TodoList = (props) => {
 
     const initState = { newItems: [...props.items] };
-
     const [listitems, setListitems] = useState(initState);
+
+    const currentTheme = useSelector(state => state.currentTheme);
 
     useEffect(() => {
         setListitems({ ...listitems, newItems: [...props.items] })
@@ -26,7 +28,7 @@ const TodoList = (props) => {
 
     return (<>
         <h4>Your Todos:</h4>
-        <ol className="list-group list-group-numbered">
+        <ol className="list-group list-group-numbered" data-bs-theme={currentTheme}>
             {listitems.newItems.map(item => (
                 <li key={item.id} className="list-group-item">
                     {item.todotext}

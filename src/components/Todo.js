@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import TodoList from './TodoList';
+import { useSelector } from 'react-redux';
 
 const Todo = (props) => {
 
     const [todo, updateTodo] = useState({ items: [], todotext: '' });
-
+    
+    const currentTheme = useSelector(state => state.currentTheme);
+    const currentTextClass = currentTheme === 'light' ? 'text-dark' : 'text-light';
+    
     const handleOnChange = (e) => {
         updateTodo({ ...todo, [e.target.name]: e.target.value });
     }
@@ -37,13 +41,13 @@ const Todo = (props) => {
     }
 
     return <>
-        <div className='container my-4 col-md-4 text-left'>
+        <div className={`container my-4 col-md-4 text-left ${currentTextClass}`}>
             <div>
                 <div className="mb-3">
-                <label htmlFor="todotext" className="form-label">{props.title}</label>
-                <input type="text" name='todotext' id='todotext' value={todo.todotext} onChange={handleOnChange} className="form-control" />
+                    <label htmlFor="todotext" className="form-label">{props.title}</label>
+                    <input type="text" name='todotext' id='todotext' value={todo.todotext} onChange={handleOnChange} className="form-control" />
                 </div>
-                
+
                 <button type="button" className="my-2 btn btn-primary" onClick={handleOnClick} disabled={todo.todotext.length === 0 ? `disable` : ""}>Add ToDo</button>
             </div>
             <div className='mt-4'>
