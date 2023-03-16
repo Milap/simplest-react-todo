@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
 import TodoList from './TodoList';
-import { useSelector } from 'react-redux';
 
 const Todo = (props) => {
 
     const [todo, updateTodo] = useState({ items: [], todotext: '' });
-    
-    const currentTheme = useSelector(state => state.currentTheme);
-    const currentTextClass = currentTheme === 'light' ? 'text-dark' : 'text-light';
-    
+
     const handleOnChange = (e) => {
         updateTodo({ ...todo, [e.target.name]: e.target.value });
     }
@@ -20,7 +16,7 @@ const Todo = (props) => {
 
     let getTodoFromDb = getTodoFromLocal();
 
-    const handleOnClick = (e) => {
+    const handleOnSubmit = (e) => {
         e.preventDefault();
         let updatedTodo;
         if (todo.todotext.length === 0) {
@@ -41,18 +37,19 @@ const Todo = (props) => {
     }
 
     return <>
-        <div className={`container my-4 col-md-4 text-left ${currentTextClass}`}>
+
+        <form method='post' onSubmit={handleOnSubmit}>
             <div>
                 <div className="mb-3">
                     <label htmlFor="todotext" className="form-label">{props.title}</label>
                     <input type="text" name='todotext' id='todotext' value={todo.todotext} onChange={handleOnChange} className="form-control" />
                 </div>
 
-                <button type="button" className="my-2 btn btn-primary" onClick={handleOnClick} disabled={todo.todotext.length === 0 ? `disable` : ""}>Add ToDo</button>
+                <button type="submit" className="my-2 btn btn-primary" disabled={todo.todotext.length === 0 ? `disable` : ""}>Add ToDo</button>
             </div>
-            <div className='mt-4'>
-                <TodoList items={getTodoFromDb} />
-            </div>
+        </form>
+        <div className='mt-4'>
+            <TodoList items={getTodoFromDb} />
         </div>
     </>;
 }

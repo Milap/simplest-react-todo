@@ -10,6 +10,7 @@ const TodoList = (props) => {
 
     useEffect(() => {
         setListitems({ ...listitems, newItems: [...props.items] })
+        // eslint-disable-next-line
     }, [props.items])
 
 
@@ -27,7 +28,7 @@ const TodoList = (props) => {
     }
 
     return (<>
-        <h4>Your Todos:</h4>
+        <h4 className='todoLabel'>Your Todos:</h4>
         <ol className="list-group list-group-numbered" data-bs-theme={currentTheme}>
             {listitems.newItems.map(item => (
                 <li key={item.id} className="list-group-item">
