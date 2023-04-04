@@ -28,7 +28,7 @@ function App() {
         <>
             <Nav appTitle={appTitle} showAlert={showAlert} />
             <Alert alert={alert} />
-            <div className='container my-4 col-md-4 text-left'>
+            <div className='container my-4 col-md-4 col-sm-6 text-left'>
                 <Routes>
                     <Route index element={<Todo title={title} showAlert={showAlert} />} />
                     <Route path="about" element={<About />} />
