@@ -1,25 +1,60 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { actionCreators } from '../state/index';
-import { changeTheme } from '../helpers/helpers';
 import { Link } from 'react-router-dom';
 
+const setBodyColor = (bgColor, color) => {
+    document.body.style.background = bgColor;
+    document.body.style.color = color;
+}
+
+const setTextBoxColor = (currentTheme) => {
+    if(document.getElementById("todotext")) {
+        if (currentTheme === 'dark') {
+            document.getElementById("todotext").style.background = "#212529";
+            document.getElementById("todotext").style.color = "#fff";
+        } else {
+            document.getElementById("todotext").style.background = "#fff";
+            document.getElementById("todotext").style.color = "#212529";
+        }
+    }
+}
+
 const Nav = (props) => {
-    // eslint-disable-next-line
-    const [isDarkMode, setDarkMode] = React.useState(false);
-    
-    const currentTheme = useSelector(state => state.currentTheme);
-
+    const [mode, setMode] = useState(false);
     const dispatch = useDispatch();
-    const { toggleTheme } = bindActionCreators(actionCreators, dispatch);
+    const { toggleThemeToDark, toggleThemeToLight } = bindActionCreators(actionCreators, dispatch);
 
-    const toggleDarkMode = () => {
+    let currentTheme = useSelector(state => state.currentTheme);
+    let newTheme = currentTheme;
+    let newMode;
 
-        toggleTheme(currentTheme === 'dark' ? "light" : "dark");
-        changeTheme(currentTheme);
+    useEffect(() => {
+        setTextBoxColor(currentTheme);
+    });
     
+    if (localStorage.getItem("currentTheme")) {
+        currentTheme = localStorage.getItem("currentTheme");
+        currentTheme === 'dark' ? setBodyColor("#212529", "#fff") : setBodyColor("#fff", "#212529");
+        newMode = true;
+        if (currentTheme === 'light') {
+            newMode = false;
+        }
+    }
+    
+    const toggleTheme = () => {
+        currentTheme === 'light' ? toggleThemeToDark() : toggleThemeToLight();
+        
+        if (currentTheme === 'light') newTheme = 'dark';
+        else newTheme = 'light';
+        
+        localStorage.setItem("currentTheme", newTheme);
+        setMode(!mode);
+        currentTheme === 'light' ? setBodyColor("#212529", "#fff") : setBodyColor("#fff", "#212529");
+        setTextBoxColor(currentTheme);
+        props.showAlert(`Theme Changed To ${currentTheme === 'dark' ? 'light' : 'dark'} Successfully!`, "success");
     };
 
     return <>
@@ -41,8 +76,8 @@ const Nav = (props) => {
                 </div>
                 <div className="form-check form-switch d-flex">
                     <DarkModeSwitch
-                        checked={isDarkMode}
-                        onChange={toggleDarkMode}
+                        checked={newMode}
+                        onChange={toggleTheme}
                         size={30}
                     />
                 </div>

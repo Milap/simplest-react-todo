@@ -1,6 +1,10 @@
+//Theme reducer function
 const themeReducer = (state = "light", action) => {
-    if (action.type === 'toggleTheme') {
-        return action.payload;
+    if (action.type === 'toDark') {
+        return "dark";
+    }
+    else if (action.type === 'toLight') {
+        return "light";
     }
     else {
         return state;
